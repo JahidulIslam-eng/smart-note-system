@@ -24,46 +24,50 @@ import type { LucideIcon } from "lucide-react";
 
 interface NavItem {
   name: string;
-  href: string;
+ 
   icon: LucideIcon;
 }
+type SidebarProps = {
+  activePage: string;
+  setActivePage: (page: string) => void;
+};
 
 const mainMenu: NavItem[] = [
   
     {
   name: "Dashboard",
-  href: "/",
+  
   icon: LayoutDashboard,
 
   },
   {
     name: "All Notes",
-    href: "/notes",
+    
     icon: FileText,
   },
   {
     name: "Folders",
-    href: "/folders",
+   
     icon: Folder,
   },
   {
     name: "Tags",
-    href: "/tags",
+   
     icon: Tag,
   },
   {
     name: "Tasks",
-    href: "/tasks",
+   
     icon: CheckSquare,
   },
   {
     name: "Reminders",
-    href: "/reminders",
+   
     icon: Bell,
   },
   {
     name: "Calendar",
-    href: "/calendar",
+    
     icon: CalendarDays,
   },
 ];
@@ -71,17 +75,17 @@ const mainMenu: NavItem[] = [
 const productivityMenu: NavItem[] = [
   {
     name: "AI Assistant",
-    href: "/ai-assistant",
+    
     icon: Sparkles,
   },
   {
     name: "Analytics",
-    href: "/analytics",
+    
     icon: ChartNoAxesColumn,
   },
   {
     name: "Search",
-    href: "/search",
+   
     icon: Search,
   },
 ];
@@ -89,40 +93,42 @@ const productivityMenu: NavItem[] = [
 const bottomMenu: NavItem[] = [
   {
     name: "Settings",
-    href: "/settings",
+    
     icon: Settings,
   },
   {
     name: "Help",
-    href: "/help",
+    
     icon: CircleHelp,
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({
+  activePage,
+  setActivePage,
+}: SidebarProps) {
   const pathname = usePathname();
 
- const renderMenu = (items: NavItem[]) => {
+const renderMenu = (items: NavItem[]) => {
   return items.map((item) => {
     const Icon = item.icon;
 
-    const isActive = pathname === item.href;
-
-    const className = `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-      isActive
-        ? "bg-violet-100 text-violet-700 font-semibold"
-        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-    }`;
+    const isActive = activePage === item.name;
 
     return (
-      <a
+      <button
         key={item.name}
-        href={item.href}
-        className={className}
+        type="button"
+        onClick={() => setActivePage(item.name)}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+          isActive
+            ? "bg-violet-100 text-violet-700 font-semibold"
+            : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        }`}
       >
         <Icon size={18} strokeWidth={1.8} />
         <span>{item.name}</span>
-      </a>
+      </button>
     );
   });
 };

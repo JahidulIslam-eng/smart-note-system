@@ -1,4 +1,6 @@
+"use client";
 
+import { useState } from "react";
 import React from 'react'
 import TotalNotes from "@/components/dashbaord components/totalNotes";
 import TotalTasks from "@/components/dashbaord components/totalTasks";
@@ -10,13 +12,31 @@ import RecentNotes from "@/components/dashbaord components/RecentNotes";
 import UpcomingDeadlines from "@/components/dashbaord components/UpcomingDeadlines";
 import Sidebar from "./layout/Sidebar";
 import DashboardHeader from "@/components/dashbaord components/DashboardHeader";
+import AllNotes from "./all-notes/AllNotes";
+import Folder from "./folder/Folder";
+import Tag from "./tag/Tag";
+import Tasks from "./task/Tasks";
+import TaskDetails from "./task/components/TaskDetails";
+import { Task } from "./task/types";
+
 
 const dashboard = () => {
+
+    const [activePage, setActivePage] = useState("Dashboard");
+const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+
+
   return (
    <div className="flex min-h-screen bg-gray-50">
-     <Sidebar />
+     <Sidebar
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
+
 
  <main className="flex-1 min-w-0 p-6 space-y-6">
+     {activePage === "Dashboard" && (
+          <>
  {/* Dashboard Header */}
         <DashboardHeader />
    {/* Statistics Cards */}
@@ -128,6 +148,31 @@ const dashboard = () => {
   />
 
 </div>
+</>
+     )}
+     {activePage === "All Notes" && <AllNotes />}
+     {activePage === "Folders" && <Folder />}
+     {activePage === "Tags" && <Tag />}
+{/* Tasks Page */}
+<div className={activePage === "Tasks" ? "block" : "hidden"}>
+  <Tasks
+    onSelectTask={(task) => {
+      setSelectedTask(task);
+      setActivePage("Task Details");
+    }}
+    updatedTask={selectedTask}
+  />
+</div>
+
+{/* Task Details Page */}
+{activePage === "Task Details" && selectedTask && (
+  <TaskDetails
+    task={selectedTask}
+    onBack={() => setActivePage("Tasks")}
+    onUpdate={(updatedTask) => setSelectedTask(updatedTask)}
+  />
+)}
+
 
 </main>
    

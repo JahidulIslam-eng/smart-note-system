@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import React from 'react'
+import { Bell, CalendarDays } from "lucide-react";
 import TotalNotes from "@/components/dashbaord components/totalNotes";
 import TotalTasks from "@/components/dashbaord components/totalTasks";
 import CompletedTasks from "@/components/dashbaord components/CompletedTasks";
@@ -18,6 +19,14 @@ import Tag from "./tag/Tag";
 import Tasks from "./task/Tasks";
 import TaskDetails from "./task/components/TaskDetails";
 import { Task } from "./task/types";
+import Reminders from "./reminder/Reminders";
+import Calendar from "./calendar/Calendar";
+import AIAssistant from "./ai-assistant/AIAssistant";
+import Analytics from "./analytics/Analytics";
+import Search from "./search/Search";
+import Settings from "./settings/Settings";
+import Help from "./help/Help";
+
 
 
 const dashboard = () => {
@@ -172,7 +181,18 @@ const [selectedTask, setSelectedTask] = useState<Task | null>(null);
     onUpdate={(updatedTask) => setSelectedTask(updatedTask)}
   />
 )}
+{activePage === "Reminders" && <Reminders />}
 
+{activePage === "Calendar" && <Calendar />}
+{activePage === "AI Assistant" && <AIAssistant />}
+
+{activePage === "Analytics" && <Analytics />}
+
+{activePage === "Search" && <Search />}
+
+{activePage === "Settings" && <Settings />}
+
+{activePage === "Help" && <Help />}
 
 </main>
    

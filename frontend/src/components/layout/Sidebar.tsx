@@ -18,6 +18,11 @@ import {
   Search,
   Settings,
   CircleHelp,
+   ListTodo,
+    Settings as SettingsIcon,
+  ChartNoAxesCombined,
+ 
+ 
 } from "lucide-react";
 
 import type { LucideIcon } from "lucide-react";
@@ -33,43 +38,14 @@ type SidebarProps = {
 };
 
 const mainMenu: NavItem[] = [
-  
-    {
-  name: "Dashboard",
-  
-  icon: LayoutDashboard,
-
-  },
-  {
-    name: "All Notes",
-    
-    icon: FileText,
-  },
-  {
-    name: "Folders",
+  { name: "Dashboard", icon: LayoutDashboard },
+  { name: "All Notes", icon: FileText },
+  { name: "Folders", icon: Folder },
+  { name: "Tags", icon: Tag },
+  { name: "Tasks", icon: ListTodo },
+  { name: "Reminders", icon: Bell },
+  { name: "Calendar", icon: CalendarDays },
    
-    icon: Folder,
-  },
-  {
-    name: "Tags",
-   
-    icon: Tag,
-  },
-  {
-    name: "Tasks",
-   
-    icon: CheckSquare,
-  },
-  {
-    name: "Reminders",
-   
-    icon: Bell,
-  },
-  {
-    name: "Calendar",
-    
-    icon: CalendarDays,
-  },
 ];
 
 const productivityMenu: NavItem[] = [
@@ -90,11 +66,18 @@ const productivityMenu: NavItem[] = [
   },
 ];
 
+
+const toolsMenu: NavItem[] = [
+  { name: "AI Assistant", icon: Sparkles },
+  { name: "Analytics", icon: ChartNoAxesCombined },
+  { name: "Search", icon: Search },
+];
+
 const bottomMenu: NavItem[] = [
   {
     name: "Settings",
     
-    icon: Settings,
+    icon: SettingsIcon,
   },
   {
     name: "Help",
@@ -133,6 +116,8 @@ const renderMenu = (items: NavItem[]) => {
   });
 };
 
+
+
   return (
     <aside className="w-60 min-h-screen bg-white border-r border-gray-200 flex flex-col shrink-0">
 
@@ -165,6 +150,10 @@ const renderMenu = (items: NavItem[]) => {
         <div className="border-t border-gray-100 pt-4 space-y-1">
           {renderMenu(productivityMenu)}
         </div>
+        {/* Tools Menu */}
+  <div className="border-t border-gray-100 pt-4 space-y-1">
+    {renderMenu(toolsMenu)}
+  </div>
 
         {/* Bottom Menu */}
         <div className="border-t border-gray-100 pt-4 space-y-1">

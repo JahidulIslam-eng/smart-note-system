@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState } from "react";
 import React from 'react'
 import { Bell, CalendarDays } from "lucide-react";
 import TotalNotes from "@/components/dashbaord components/totalNotes";
@@ -26,178 +26,110 @@ import Analytics from "./analytics/Analytics";
 import Search from "./search/Search";
 import Settings from "./settings/Settings";
 import Help from "./help/Help";
+import DashboardGuard from "./DashboardGuard";
 
 
 
-const dashboard = () => {
+const Dashboard = () => {
+  const [activePage, setActivePage] = useState("Dashboard");
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [user, setUser] = useState<any>(null);
 
-    const [activePage, setActivePage] = useState("Dashboard");
-const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
 
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  if (!user) {
+    return null;
+  }
 
   return (
-   <div className="flex min-h-screen bg-gray-50">
-     <Sidebar
-        activePage={activePage}
-        setActivePage={setActivePage}
-      />
+    <DashboardGuard>
+      <div className="flex min-h-screen bg-gray-50">
 
-
- <main className="flex-1 min-w-0 p-6 space-y-6">
-     {activePage === "Dashboard" && (
-          <>
- {/* Dashboard Header */}
-        <DashboardHeader />
-   {/* Statistics Cards */}
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-   
-           <TotalNotes
-             totalNotes={24}
-             percentage={12}
-           />
-   <TotalTasks
-          totalTasks={12}
-          percentage={8}
+        <Sidebar
+          activePage={activePage}
+          setActivePage={setActivePage}
         />
 
- <CompletedTasks
-          completedTasks={8}
-          percentage={67}
-        />
+        <main className="flex-1 min-w-0 p-6 space-y-6">
 
-        <UpcomingTasks
-          upcomingTasks={3}
-          percentage={2}
-        />
+          {activePage === "Dashboard" && (
+            <>
+              <DashboardHeader user={user} />
 
-         </div>
+              {/* তোমার বাকি Dashboard components */}
+            </>
+          )}
 
-{/* Schedule & Productivity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {activePage === "All Notes" && (
+            <AllNotes userId={user.id} />
+          )}
 
-        <TodaysSchedule
-          schedules={[
-            {
-              id: 1,
-              title: "Finish Laravel API",
-              time: "08:00 AM",
-              color: "text-orange-500",
-            },
-            {
-              id: 2,
-               title: "Study Next.js",
-              time: "11:00 AM",
-              color: "text-blue-500",
-            },
-            {
-              id: 3,
-              title: "Project Meeting",
-              time: "02:00 PM",
-              color: "text-violet-500",
-            },
-          ]}
-        />
-<ProductivityOverview />
+          {activePage === "Folders" && (
+            <Folder userId={user.id} />
+          )}
 
+          {activePage === "Tags" && (
+            <Tag userId={user.id} />
+          )}
+
+          {activePage === "Tasks" && (
+            <Tasks
+              userId={user.id}
+              onSelectTask={(task) => {
+                setSelectedTask(task);
+                setActivePage("Task Details");
+              }}
+              updatedTask={selectedTask}
+            />
+          )}
+
+          {activePage === "Task Details" && selectedTask && (
+            <TaskDetails
+              userId={user.id}
+              task={selectedTask}
+              onBack={() => setActivePage("Tasks")}
+              onUpdate={(updatedTask) => setSelectedTask(updatedTask)}
+            />
+          )}
+
+          {activePage === "Reminders" && (
+            <Reminders userId={user.id} />
+          )}
+
+          {activePage === "Calendar" && (
+            <Calendar userId={user.id} />
+          )}
+
+          {activePage === "AI Assistant" && (
+            <AIAssistant userId={user.id} />
+          )}
+
+          {activePage === "Analytics" && (
+            <Analytics userId={user.id} />
+          )}
+
+          {activePage === "Search" && (
+            <Search userId={user.id} />
+          )}
+
+          {activePage === "Settings" && (
+            <Settings userId={user.id} />
+          )}
+
+          {activePage === "Help" && (
+            <Help userId={user.id} />
+          )}
+
+        </main>
       </div>
+    </DashboardGuard>
+  );
+};
 
-
-{/* Recent Notes & Upcoming Deadlines */}
-
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-
-  <RecentNotes
-    notes={[
-      {
-        id: 1,
-        title: "My Project Idea",
-        updatedAt: "2h ago",
-        color: "bg-orange-100 text-orange-600",
-        pinned: true,
-      },
-      {
-        id: 2,
-        title: "Study Plan",
-        updatedAt: "3h ago",
-        color: "bg-violet-100 text-violet-600",
-      },
-      {
-        id: 3,
-        title: "Laravel Tips",
-        updatedAt: "1d ago",
-        color: "bg-blue-100 text-blue-600",
-      },
-    ]}
-  />
-
-  <UpcomingDeadlines
-    deadlines={[
-      {
-        id: 1,
-        title: "Laravel Project",
-        date: "Nov 20",
-        time: "09:00 AM",
-        color: "bg-orange-100 text-orange-600",
-      },
-      {
-        id: 2,
-        title: "Design Portfolio",
-        date: "Nov 22",
-        time: "11:00 AM",
-        color: "bg-violet-100 text-violet-600",
-      },
-      {
-        id: 3,
-        title: "Documentation",
-        date: "Nov 25",
-        time: "05:00 PM",
-        color: "bg-blue-100 text-blue-600",
-      },
-    ]}
-  />
-
-</div>
-</>
-     )}
-     {activePage === "All Notes" && <AllNotes />}
-     {activePage === "Folders" && <Folder />}
-     {activePage === "Tags" && <Tag />}
-{/* Tasks Page */}
-<div className={activePage === "Tasks" ? "block" : "hidden"}>
-  <Tasks
-    onSelectTask={(task) => {
-      setSelectedTask(task);
-      setActivePage("Task Details");
-    }}
-    updatedTask={selectedTask}
-  />
-</div>
-
-{/* Task Details Page */}
-{activePage === "Task Details" && selectedTask && (
-  <TaskDetails
-    task={selectedTask}
-    onBack={() => setActivePage("Tasks")}
-    onUpdate={(updatedTask) => setSelectedTask(updatedTask)}
-  />
-)}
-{activePage === "Reminders" && <Reminders />}
-
-{activePage === "Calendar" && <Calendar />}
-{activePage === "AI Assistant" && <AIAssistant />}
-
-{activePage === "Analytics" && <Analytics />}
-
-{activePage === "Search" && <Search />}
-
-{activePage === "Settings" && <Settings />}
-
-{activePage === "Help" && <Help />}
-
-</main>
-   
-       </div>
-  )
-}
-
-export default dashboard
+export default Dashboard;

@@ -1,13 +1,5 @@
-import Image from "next/image";
-import DashBoard from "@/components/dashboard";
+import LoginPage from "@/app/login/page";
 
-
-export default function Home() {
-  return (
-    <div>
-
-     <DashBoard/>
-
-    </div>
-  );
+export default function HomePage() {
+  return <LoginPage />;
 }

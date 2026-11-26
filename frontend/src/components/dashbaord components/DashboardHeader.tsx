@@ -5,11 +5,17 @@ import Profile from "./header components/Profile";
 import QuickAddButton from "./header components/QuickAddButton";
 
 type DashboardHeaderProps = {
+   user: {
+    id: number;
+    name: string;
+    email: string;
+  };
   onSearch?: (value: string) => void;
   onQuickAdd?: (type: "note" | "task") => void;
 };
 
 export default function DashboardHeader({
+  user,
   onSearch,
   onQuickAdd,
 }: DashboardHeaderProps) {
@@ -21,7 +27,8 @@ export default function DashboardHeader({
 
         <SearchBar onSearch={onSearch} />
 
-        <Profile />
+        <Profile user={user} />
+
 
       </div>
 
@@ -38,7 +45,9 @@ export default function DashboardHeader({
           </p>
         </div>
 
-        <QuickAddButton onQuickAdd={onQuickAdd} />
+        <QuickAddButton 
+         userId={user.id}
+        onQuickAdd={onQuickAdd} />
 
       </div>
 

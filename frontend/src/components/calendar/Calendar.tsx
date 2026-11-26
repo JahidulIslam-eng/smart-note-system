@@ -11,7 +11,9 @@ import CalendarGrid from "./components/CalendarGrid";
 import CalendarEvents, {
   CalendarEvent,
 } from "./components/CalendarEvents";
-
+interface Props {
+  userId: number;
+}
 function formatDate(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -26,7 +28,7 @@ function getDateOffset(offset: number) {
   return formatDate(date);
 }
 
-export default function Calendar() {
+export default function Calendar({ userId }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
   const [view, setView] = useState<CalendarView>("Month");

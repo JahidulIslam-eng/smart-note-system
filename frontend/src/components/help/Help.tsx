@@ -7,8 +7,10 @@ import HelpHeader from "./components/HelpHeader";
 import HelpSearch from "./components/HelpSearch";
 import HelpCategories from "./components/HelpCategories";
 import FAQ from "./components/FAQ";
-
-export default function Help() {
+interface Props {
+  userId: number;
+}
+export default function Help({ userId }: Props) {
   const [search, setSearch] = useState("");
 
   return (

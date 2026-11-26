@@ -6,7 +6,9 @@ import {
   TrendingUp,
   BarChart3,
 } from "lucide-react";
-
+interface Props {
+  userId: number;
+}
 const stats = [
   {
     title: "Total Notes",
@@ -45,7 +47,7 @@ const topTags = [
   { name: "Ideas", count: 3, percentage: 10 },
 ];
 
-export default function Analytics() {
+export default function Analytics({ userId }: Props) {
   return (
     <div className="space-y-6">
       {/* Header */}

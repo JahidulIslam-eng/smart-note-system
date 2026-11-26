@@ -12,6 +12,7 @@ import TaskComments from "./TaskComments";
 import TaskInfo from "./TaskInfo";
 
 type Props = {
+   userId: number;
   task: Task;
   onBack: () => void;
   onUpdate: (updatedTask: Task) => void;
@@ -20,6 +21,7 @@ type Props = {
 
 
 export default function TaskDetails({
+    userId,
   task,
   onBack,
   onUpdate,

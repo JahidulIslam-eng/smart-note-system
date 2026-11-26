@@ -60,8 +60,46 @@ const Dashboard = () => {
 
           {activePage === "Dashboard" && (
             <>
-              <DashboardHeader user={user} />
+              <DashboardHeader user={user} 
+  onQuickAdd={(type) => {
+    if (type === "note") {
+      setActivePage("All Notes");
+    }
 
+    if (type === "task") {
+      setActivePage("Tasks");
+    }
+  }}  />
+ <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+      <TotalNotes
+  userId={user.id}
+  onViewAll={() => setActivePage("All Notes")}
+/>
+
+      <TotalTasks userId={user.id} />
+
+      <CompletedTasks userId={user.id} />
+
+      <UpcomingTasks userId={user.id} />
+
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+      <TodaysSchedule userId={user.id} />
+
+      <ProductivityOverview userId={user.id} />
+
+    </div>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+     <RecentNotes userId={user.id} />
+
+      <UpcomingDeadlines userId={user.id} />
+
+    </div>
               {/* তোমার বাকি Dashboard components */}
             </>
           )}

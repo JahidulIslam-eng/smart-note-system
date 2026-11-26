@@ -13,6 +13,7 @@ import AddTaskModal from "./components/AddTaskModal";
 type TasksProps = {
   onSelectTask: (task: Task) => void;
   updatedTask?: Task | null;
+  userId: number;
 };
 
 const initialTasks: Task[] = [
@@ -58,6 +59,7 @@ const initialTasks: Task[] = [
 ];
 
 export default function Tasks({
+  userId,
   onSelectTask,
   updatedTask,
 }: TasksProps) {

@@ -21,7 +21,9 @@ import {
   EditorData,
   PrivacyData,
 } from "./types";
-
+interface Props {
+  userId: number;
+}
 const defaultProfile: ProfileData = {
   name: "",
   email: "",
@@ -54,7 +56,7 @@ const defaultPrivacy: PrivacyData = {
   lockNotes: false,
 };
 
-export default function Settings() {
+export default function Settings({ userId }: Props) {
   const [activeTab, setActiveTab] =
     useState<SettingsTab>("Profile");
 

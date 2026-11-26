@@ -11,6 +11,9 @@ export type FolderItem = {
   name: string;
   color: string;
 };
+interface Props {
+  userId: number;
+}
 
 const initialFolders: FolderItem[] = [
   { id: 1, name: "Personal", color: "bg-violet-100 text-violet-700" },
@@ -19,7 +22,7 @@ const initialFolders: FolderItem[] = [
   { id: 4, name: "Projects", color: "bg-orange-100 text-orange-700" },
 ];
 
-export default function Folder() {
+export default function Folder({ userId }: Props) {
   const [folders, setFolders] = useState<FolderItem[]>(initialFolders);
   const [showModal, setShowModal] = useState(false);
   const [editingFolder, setEditingFolder] = useState<FolderItem | null>(null);

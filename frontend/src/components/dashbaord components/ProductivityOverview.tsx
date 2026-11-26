@@ -1,43 +1,89 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TrendingUp } from "lucide-react";
 
-const weeklyData = {
-  "This Week": [
-    { day: "Mon", value: 45 },
-    { day: "Tue", value: 65 },
-    { day: "Wed", value: 55 },
-    { day: "Thu", value: 80 },
-    { day: "Fri", value: 70 },
-    { day: "Sat", value: 90 },
-    { day: "Sun", value: 95 },
-  ],
-  "Last Week": [
-    { day: "Mon", value: 35 },
-    { day: "Tue", value: 50 },
-    { day: "Wed", value: 45 },
-    { day: "Thu", value: 65 },
-    { day: "Fri", value: 55 },
-    { day: "Sat", value: 75 },
-    { day: "Sun", value: 85 },
-  ],
-};
+interface WeeklyItem {
+  day: string;
+  value: number;
+  completionPercentage: number;
+  completedTasks: number;
+  totalTasks: number;
+  notesCount: number;
+  activityCount: number;
+}
 
-type Period = keyof typeof weeklyData;
+interface ProductivityOverviewProps {
+  userId: number;
+}
 
-export default function ProductivityOverview() {
+type Period = "This Week" | "Last Week";
+
+export default function ProductivityOverview({
+  userId,
+}: ProductivityOverviewProps) {
   const [period, setPeriod] = useState<Period>("This Week");
 
+  const [weeklyData, setWeeklyData] = useState<
+    Record<Period, WeeklyItem[]>
+  >({
+    "This Week": [],
+    "Last Week": [],
+  });
+
+  const [loading, setLoading] = useState(true);
+
   const chartData = weeklyData[period];
+
+  useEffect(() => {
+    const fetchProductivity = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          throw new Error("Authentication token not found");
+        }
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/productivity-overview`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Failed to fetch productivity"
+          );
+        }
+
+        const data = await response.json();
+
+        setWeeklyData(data.weeklyData);
+
+      } catch (error) {
+        console.error("Productivity fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProductivity();
+  }, [userId]);
+
+  if (loading) {
+    return <p>Loading productivity...</p>;
+  }
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
 
-      {/* Header */}
       <div className="flex items-center justify-between mb-5">
-
         <h3 className="text-sm font-semibold text-gray-800">
           Productivity Overview
         </h3>
@@ -50,10 +96,8 @@ export default function ProductivityOverview() {
           <option value="This Week">This Week</option>
           <option value="Last Week">Last Week</option>
         </select>
-
       </div>
 
-      {/* Chart */}
       <div className="flex items-end justify-between gap-2 h-36">
 
         {chartData.map((item) => (
@@ -62,14 +106,12 @@ export default function ProductivityOverview() {
             className="flex-1 h-full flex flex-col items-center justify-end gap-2"
           >
 
-            {/* Bar */}
             <div
               className="w-full max-w-5 rounded-t-md bg-violet-500 hover:bg-violet-600 transition-all duration-300"
               style={{ height: `${item.value}%` }}
               title={`${item.value}%`}
             />
 
-            {/* Day */}
             <span className="text-[10px] text-gray-400">
               {item.day}
             </span>
@@ -79,18 +121,34 @@ export default function ProductivityOverview() {
 
       </div>
 
-      {/* Footer */}
-      <div className="flex items-center gap-1 mt-4 pt-3 border-t border-gray-100">
+      <div className="mt-4 pt-3 border-t border-gray-100 grid grid-cols-3 gap-2 text-center">
 
-        <TrendingUp size={15} className="text-emerald-500" />
+        <div>
+          <p className="text-lg font-semibold text-violet-600">
+            {chartData.reduce((sum, item) => sum + item.completedTasks, 0)}
+          </p>
+          <p className="text-[10px] text-gray-400">
+            Completed Tasks
+          </p>
+        </div>
 
-        <span className="text-xs font-medium text-emerald-500">
-          12%
-        </span>
+        <div>
+          <p className="text-lg font-semibold text-blue-600">
+            {chartData.reduce((sum, item) => sum + item.notesCount, 0)}
+          </p>
+          <p className="text-[10px] text-gray-400">
+            Notes Created
+          </p>
+        </div>
 
-        <span className="text-xs text-gray-400">
-          productivity increased
-        </span>
+        <div>
+          <p className="text-lg font-semibold text-emerald-600">
+            {chartData.reduce((sum, item) => sum + item.activityCount, 0)}
+          </p>
+          <p className="text-[10px] text-gray-400">
+            Total Activity
+          </p>
+        </div>
 
       </div>
 

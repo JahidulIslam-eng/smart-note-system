@@ -8,8 +8,10 @@ type Message = {
   role: "user" | "assistant";
   text: string;
 };
-
-export default function AIAssistant() {
+interface Props {
+  userId: number;
+}
+export default function AIAssistant({ userId }: Props) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([
     {

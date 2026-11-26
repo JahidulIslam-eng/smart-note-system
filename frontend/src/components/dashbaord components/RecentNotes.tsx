@@ -1,5 +1,8 @@
 
-import { FileText, ChevronRight, Pin } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { ChevronRight, FileText, Pin } from "lucide-react";
 
 interface Note {
   id: number;
@@ -10,14 +13,65 @@ interface Note {
 }
 
 interface RecentNotesProps {
-  notes: Note[];
+  userId: number;
 }
 
-export default function RecentNotes({ notes }: RecentNotesProps) {
+export default function RecentNotes({ userId }: RecentNotesProps) {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchRecentNotes = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/recent-notes`,
+          {
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Failed to fetch notes");
+        }
+
+        const data = await response.json();
+
+        setNotes(
+          data.notes.map((note: any, index: number) => ({
+            id: note.id,
+            title: note.title,
+            updatedAt: new Date(note.updated_at).toLocaleDateString(),
+            color: [
+              "bg-blue-100 text-blue-600",
+              "bg-purple-100 text-purple-600",
+              "bg-green-100 text-green-600",
+              "bg-yellow-100 text-yellow-600",
+            ][index % 4],
+            pinned: note.pinned ?? false,
+          }))
+        );
+      } catch (error) {
+        console.error("Recent notes fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecentNotes();
+  }, [userId]);
+
+  if (loading) {
+    return <p>Loading notes...</p>;
+  }
+
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-
-      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-semibold text-gray-800">
           Recent Notes
@@ -29,9 +83,7 @@ export default function RecentNotes({ notes }: RecentNotesProps) {
         </button>
       </div>
 
-      {/* Notes List */}
       <div className="space-y-3">
-
         {notes.length === 0 ? (
           <p className="text-sm text-gray-400 text-center py-5">
             No notes available
@@ -42,9 +94,7 @@ export default function RecentNotes({ notes }: RecentNotesProps) {
               key={note.id}
               className="flex items-center justify-between gap-3"
             >
-
               <div className="flex items-center gap-3 min-w-0">
-
                 <div className={`p-2 rounded-lg ${note.color}`}>
                   <FileText size={17} />
                 </div>
@@ -64,18 +114,15 @@ export default function RecentNotes({ notes }: RecentNotesProps) {
                     {note.updatedAt}
                   </p>
                 </div>
-
               </div>
 
               <ChevronRight
                 size={15}
                 className="text-gray-400 shrink-0"
               />
-
             </div>
           ))
         )}
-
       </div>
     </div>
   );

@@ -11,7 +11,9 @@ import AddReminderModal from "./components/AddReminderModal";
 type Tab = "Upcoming" | "Overdue" | "History";
 
 const today = new Date().toLocaleDateString("en-CA");
-
+interface Props {
+  userId: number;
+}
 const initialReminders: Reminder[] = [
   {
     id: 1,
@@ -43,7 +45,7 @@ const initialReminders: Reminder[] = [
   },
 ];
 
-export default function Reminders() {
+export default function Reminders({ userId }: Props) {
   const [reminders, setReminders] = useState(initialReminders);
   const [activeTab, setActiveTab] = useState<Tab>("Upcoming");
   const [showModal, setShowModal] = useState(false);

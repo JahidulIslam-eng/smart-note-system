@@ -11,7 +11,9 @@ export type TagItem = {
   name: string;
   color: string;
 };
-
+interface Props {
+  userId: number;
+}
 const initialTags: TagItem[] = [
   { id: 1, name: "Important", color: "bg-red-100 text-red-700" },
   { id: 2, name: "Ideas", color: "bg-yellow-100 text-yellow-700" },
@@ -19,7 +21,7 @@ const initialTags: TagItem[] = [
   { id: 4, name: "Learning", color: "bg-green-100 text-green-700" },
 ];
 
-export default function Tag() {
+export default function Tag({ userId }: Props) {
   const [tags, setTags] = useState<TagItem[]>(initialTags);
   const [showModal, setShowModal] = useState(false);
   const [editingTag, setEditingTag] = useState<TagItem | null>(null);

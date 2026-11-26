@@ -8,7 +8,9 @@ import {
   Bell,
   X,
 } from "lucide-react";
-
+interface Props {
+  userId: number;
+}
 type SearchType = "All" | "Notes" | "Tasks" | "Reminders";
 
 type SearchItem = {
@@ -71,7 +73,7 @@ const filters: SearchType[] = [
   "Reminders",
 ];
 
-export default function Search() {
+export default function Search({ userId }: Props) {
   const [query, setQuery] = useState("");
   const [activeFilter, setActiveFilter] =
     useState<SearchType>("All");

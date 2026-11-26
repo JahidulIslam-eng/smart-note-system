@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Search, Grid2X2, List, Plus } from "lucide-react";
@@ -33,6 +34,7 @@ export default function NotesHeader({
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search notes..."
+          aria-label="Search notes"
           className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
         />
       </div>
@@ -40,8 +42,12 @@ export default function NotesHeader({
       {/* Actions */}
       <div className="flex items-center gap-2">
 
+        {/* Grid View */}
         <button
+          type="button"
           onClick={() => setView("grid")}
+          aria-label="Grid View"
+          aria-pressed={view === "grid"}
           className={`rounded-lg border p-2.5 transition ${
             view === "grid"
               ? "border-violet-200 bg-violet-50 text-violet-700"
@@ -52,8 +58,12 @@ export default function NotesHeader({
           <Grid2X2 size={18} />
         </button>
 
+        {/* List View */}
         <button
+          type="button"
           onClick={() => setView("list")}
+          aria-label="List View"
+          aria-pressed={view === "list"}
           className={`rounded-lg border p-2.5 transition ${
             view === "list"
               ? "border-violet-200 bg-violet-50 text-violet-700"
@@ -64,7 +74,9 @@ export default function NotesHeader({
           <List size={18} />
         </button>
 
+        {/* New Note */}
         <button
+          type="button"
           onClick={onNewNote}
           className="flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-700"
         >
